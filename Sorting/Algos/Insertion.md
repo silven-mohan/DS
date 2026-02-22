@@ -7,24 +7,32 @@
 
 ### Steps:
 
-    1. for i = 1 to n do
+    1. if n < 1 then 
 
-        1.1. key := A[i]
+        1.1. print "No elements for sorting!!"
 
-        1.2. j := i-1
+        1.2 exit
 
-        1.3. while j >= 0 and a[j] < key then do
+    2. end if
+
+    3. for i = 1 to n do
+
+        3.1. key := A[i]
+
+        3.2. j := i-1
+
+        3.3. while j >= 0 and a[j] < key then do
             
-            1.3.1. A[j+1] := A[j]
+            3.3.1. A[j+1] := A[j]
             
-            1.3.2. j := j - 1
+            3.3.2. j := j - 1
 
-        1.4. end while
+        3.4. end while
         
-        1.5. A[j+1] := key
+        3.5. A[j+1] := key
 
-    2. end for
+    4. end for
     
-    3. stop
+    5. stop
 
 ---

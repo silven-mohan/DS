@@ -62,5 +62,13 @@ int main()
 	//Accessesing:
 	printf("\n\n[ %d ] -> [ %d ] -> [ %d ]\n\n", first -> data, second -> data, third -> data);
 
+
+
+	//Free the allocated memory:
+	free(first);
+	free(second);
+	free(third);
+	free(header);
+
 	return 0;
 }

@@ -93,9 +93,13 @@ int init(void)
 	for(i=0;i<n;i++)
 	{
 		scanf("%d", &((N+i) -> data));
+		if(i == n-1)
+		{
+			(N+i) -> next = NULL;
+			return 0;
+		}
 		(N+i) -> next = N+(i+1);
 	}
-	(N+i) -> next = NULL;
 	printf("\nSuccessfully initialized the list with values.\n");
 	
 	return 0;
@@ -109,13 +113,16 @@ int display(void)
 {
 	int i = 0;
 
-	printf("\nThe list is: ");
+	struct node *temp;
 
-	while((N+i) -> next != NULL)
+	//Printing all the nodes:
+	temp = header.next;
+	
+	printf("\nThe list is: ");
+	while(temp != NULL)
 	{
-		printf("[ %d ] -> ", (N+i) -> data);
-		(N+i) -> next = N+(i+1);
-		i += 1;
+		printf("[ %d ] -> ", temp -> data);
+		temp = temp -> next;
 	}
 	printf("[ NULL ]\n");
 

@@ -123,11 +123,15 @@ int display(void)
 		return 1;
 	}
 
+	struct node *temp;
+	temp = header.next;
+
+	//Printing all the node's data values by traversing through the list.
 	printf("\nThe data in all of the nodes is: \n");
-	for(i=0;i<n;i++)
+	while(temp != NULL)
 	{
-		printf("[ %d ] -> ", ((N+i) -> data));
-		(N+i) -> next = N+(i+1);
+		printf("[ %d ] -> ", temp -> data);
+		temp = temp -> next;
 	}
 	printf("[ NULL ]\n\n");
 

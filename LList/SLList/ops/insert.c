@@ -167,11 +167,11 @@ int insertMain()
 	}
 	else if(choice == 2)
 	{
-	//	if(insertPos()) return 1;
+		if(insertPos()) return 1;
 	}
 	else if(choice == 3)
 	{
-	//	if(insertEnd()) return 1;
+		if(insertEnd()) return 1;
 	}
 	else
 	{
@@ -201,4 +201,79 @@ int insertFront()
 	new.next = temp;
 
 	return 0;
+}
+
+
+//insertPos():
+//This function inserts a node at the specified position.
+
+int insertPos()
+{
+	int pos, j=0;
+	printf("\nAt which position do you want to insert the node: ");
+	scanf(" %d", &pos);
+
+	if(pos < 0 || pos > n+1)
+	{
+		printf("\nCannot insert at that position.\n");
+		return 1;
+	}	
+
+	if(pos == 0)
+	{
+		insertFront();
+		return 0;
+	}
+	if(pos == n+1)
+	{
+		insertEnd();
+		return 0;
+	}
+	
+	struct node *temp = NULL, *prev = NULL;
+
+	temp = header.next;
+
+	while(temp != NULL && j < pos)
+	{
+		prev = temp;
+		temp = temp -> next;
+		j += 1;
+	}
+	
+	//Linking the new node to the node befor position 'pos':
+	prev -> next = &new;
+
+	//Linking the nodes from the position 'pos' to the the new node:
+	new.next = temp;
+
+	//Display the modified list:
+	display();
+
+	return 0;
+}
+
+
+//insertEnd():
+//This function inserts a node at the end of the list.
+
+int insertEnd()
+{
+	struct node *temp;
+
+	temp = header.next;
+
+
+	//Traversing till the last node:
+	while(temp -> next != NULL)
+	{
+		temp = temp -> next;
+	}
+
+	//Inserting the node at the end:
+	temp -> next = &new;
+	new.next = NULL;
+
+	return 0;
+		
 }

@@ -23,28 +23,28 @@ struct node {
 	struct node *next;
 };
 
-struct node header1, header2, header3, *N1 = NULL, *N2 = NULL;	//Declaraing here for the global access.
+struct node *header1 = NULL, *header2 = NULL, *header3 = NULL, *N1 = NULL, *N2 = NULL;	//Declaraing here for the global access.
 int n1, n2, size;
 
 
 /** ===== Function Prototypes ===== **/
-int create(struct node *);
-int init(struct node, struct node *, int);
-int display(struct node);
-int merge(struct node, struct node);
+int create(struct node **);
+int init(struct node *, struct node *, int);
+int display(struct node *);
+int merge(struct node *, struct node *);
 
 
 /** ===== Main Function ===== **/
 int main()
 {
 	//First list:
-	create(N1);
+	create(&N1);
 	n1 = size;
 	init(header1, N1, n1);
 	display(header1);
 
 	//Second List:
-	create(N1);
+	create(&N1);
 	n2 = size;
 	init(header2, N2, n2);
 	display(header2);
@@ -62,7 +62,7 @@ int main()
 //create():
 //This function allocates the memory for the nodes in the list.
 
-int create(struct node *N)
+int create(struct node **N)
 {
 	//Asking the user for the total no. of nodes:
 	printf("\nEnter the no. of nodes in the list: ");
@@ -75,10 +75,10 @@ int create(struct node *N)
 	}
 
 	//Allocating the memory:
-	N = malloc(size * (sizeof(struct node *)));
+	*N = malloc(size * (sizeof(struct node )));
 
 	//Checking if the allocation is failed:
-	if(N == NULL)
+	if(*N == NULL)
 	{
 		printf("\nMemory Allocation failed!!\n");
 		return 1;
@@ -91,10 +91,10 @@ int create(struct node *N)
 //init():
 //This function initializes all the data elements in the given node list with the user given values.
 
-int init(struct node header, struct node *N, int size1)
+int init(struct node *header, struct node *N, int size1)
 {
 	//Linking the list to the header node:
-	header.next = N;
+	header->next = N;
 	int i;
 
 	//Initializing with values:
@@ -121,10 +121,10 @@ int init(struct node header, struct node *N, int size1)
 //display():
 //This function traverses through the list and displays the node values.
 
-int display(struct node header)
+int display(struct node *header)
 {
 	struct node *temp = NULL;
-	temp = header.next;
+	temp = header->next;
 
 	//Traversing through the list:
 	printf("\nThe list is : \n");
@@ -142,13 +142,13 @@ int display(struct node header)
 //merge():
 //This function merges two linked lists as a single list.
 
-int merge(struct node h1, struct node h2)
+int merge(struct node *h1, struct node *h2)
 {
 	//Linking the first list to the header:
-	header3.next = h1.next;
+	header3->next = h1->next;
 
 	struct node *temp = NULL;
-	temp = header3.next;
+	temp = header3->next;
 
 	//Traversing till the last node of the first list:
 	while(temp -> next != NULL)
@@ -157,7 +157,7 @@ int merge(struct node h1, struct node h2)
 	}
 
 	//Linking last node of list1 to first node of list2:
-	temp -> next = h2.next;
+	temp -> next = h2->next;
 
 	return 0;
 }

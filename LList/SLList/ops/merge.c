@@ -11,6 +11,11 @@
 */
 
 
+/** ===== Preprocessing Directives ===== **/
+#include<stdio.h>		//For Basic I/O functions.
+#include<stdlib.h>	//For DMA functions like malloc(), free(),...
+
+
 /** ===== Global Declaration ===== **/
 /* ---- Node Definition ---- */
 struct node {
@@ -19,11 +24,11 @@ struct node {
 };
 
 struct node header1, header2, header3, *N1 = NULL, *N2 = NULL;	//Declaraing here for the global access.
-int n1, n2;
+int n1, n2, size;
 
 
 /** ===== Function Prototypes ===== **/
-int create(struct node *, int);
+int create(struct node *);
 int init(struct node, struct node *, int);
 int display(struct node);
 int merge(struct node, struct node);
@@ -33,7 +38,20 @@ int merge(struct node, struct node);
 int main()
 {
 	//First list:
-	create(N1, n1);
+	create(N1);
+	n1 = size;
+	init(header1, N1, n1);
+	display(header1);
+
+	//Second List:
+	create(N1);
+	n2 = size;
+	init(header2, N2, n2);
+	display(header2);
+
+	//Merging:
+	merge(header1, header2);
+	display(header3);		//Display the merged list.
 
 	return 0;	//Exit Status.
 }
@@ -44,7 +62,7 @@ int main()
 //create():
 //This function allocates the memory for the nodes in the list.
 
-int create(struct node *N, int size);
+int create(struct node *N)
 {
 	//Asking the user for the total no. of nodes:
 	printf("\nEnter the no. of nodes in the list: ");
@@ -73,18 +91,19 @@ int create(struct node *N, int size);
 //init():
 //This function initializes all the data elements in the given node list with the user given values.
 
-int init(struct node header, struct node *N, int size)
+int init(struct node header, struct node *N, int size1)
 {
 	//Linking the list to the header node:
 	header.next = N;
+	int i;
 
 	//Initializing with values:
 	printf("\nEnter the node values: ");
-	for(i=0;i<size;i++)
+	for(i=0;i<size1;i++)
 	{
 		scanf("%d", &((N+i)->data));
 
-		if(i == n-1)
+		if(i == size1-1)
 		{
 			(N+i)->next = NULL;
 			break;
@@ -115,6 +134,30 @@ int display(struct node header)
 		temp = temp -> next;
 	}
 	printf("[ NULL ]\n");
+
+	return 0;
+}
+
+
+//merge():
+//This function merges two linked lists as a single list.
+
+int merge(struct node h1, struct node h2)
+{
+	//Linking the first list to the header:
+	header3.next = h1.next;
+
+	struct node *temp = NULL;
+	temp = header3.next;
+
+	//Traversing till the last node of the first list:
+	while(temp -> next != NULL)
+	{
+		temp = temp -> next;
+	}
+
+	//Linking last node of list1 to first node of list2:
+	temp -> next = h2.next;
 
 	return 0;
 }

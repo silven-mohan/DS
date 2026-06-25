@@ -298,7 +298,11 @@ int deletePos()
 
 	prev -> next = temp -> next;
 	next = temp -> next;
-	next -> prev = prev;
+	
+	if(next != NULL)
+	{
+		next -> prev = prev;
+	}
 
 	free(temp);
 

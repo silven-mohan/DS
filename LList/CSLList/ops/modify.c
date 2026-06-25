@@ -204,7 +204,7 @@ int display(struct node *head)
 
 int modify()
 {
-	int key, i = 0, newValue;
+	int key, i = 1, newValue;
 	
 	//Taking the element from the user:
 	printf("\nEnter the position of the node whose value is to be modified: ");
@@ -215,7 +215,7 @@ int modify()
 	scanf("%d", &newValue);
 
 	//Checking if position is out of bounds:
-	if(key < 0 || key >= n)
+	if(key < 1 || key > n)
 	{	
 		printf("\nPosition of the node is out of bounds. Can't Access!!\n");
 		return 1;
@@ -235,7 +235,7 @@ int modify()
 		}
 		i += 1;
 		temp = temp -> next;
-	}while(temp -> next != header -> next);
+	}while(temp != header -> next);
 
 	printf("\nThe modified list is: \n");
 	if(display(header)) return 1;		//Display the modified list.

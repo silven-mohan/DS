@@ -299,18 +299,19 @@ int deletePos()
 	struct node *temp = NULL, *prev = NULL;
 	temp = header -> next;
 
+	//Checking if the  position is out of range:
+	if(pos < 1 || pos > n)
+	{
+		printf("\nPosition of the node is out of bounds. Can't Access!!\n");
+		return 1;
+	}
+
 	do
 	{
 		prev = temp;
 		temp = temp -> next;
 		j += 1;
 	}while(temp -> next != header -> next && j < pos);
-
-	if(pos < 0)
-	{
-		printf("\nPosition out of range.\n");
-		return 1;
-	}
 
 	prev -> next = temp -> next;
 	free(temp);

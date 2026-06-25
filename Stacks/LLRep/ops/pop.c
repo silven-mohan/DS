@@ -38,8 +38,8 @@ int main()
 	struct node *top = NULL, *header = NULL;
 
 	//Allocating memory:
-	top = malloc(sizeof(struct node*));
-	header = malloc(sizeof(struct node*));
+	top = malloc(sizeof(struct node));
+	header = malloc(sizeof(struct node));
 
 	//Checking if allocation failed:
 	if(top == NULL || header == NULL)
@@ -196,7 +196,16 @@ int POP(struct node *head, struct node *top)
 	}
 	
 	top -> next = prev;
-	prev -> next = NULL;
+
+	if(prev != NULL) 
+	{
+		prev -> next = NULL;
+	} 
+	else 
+	{
+		header -> next = NULL; 
+	}
+	
 	free(temp);
 
 	return 0;

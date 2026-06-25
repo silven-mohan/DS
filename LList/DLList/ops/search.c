@@ -200,10 +200,10 @@ int search()
 	scanf("%d", &key);
 
 	struct node *temp = NULL;
-	temp = header;
+	temp = header -> next;
 
 	//Traversing through the entire list:
-	while(temp -> next != NULL)
+	while(temp != NULL)
 	{
 		if(temp -> data == key)		//Comparing the node with key.
 		{

@@ -292,6 +292,11 @@ int insertPos()
 	new->next = temp;
 	new->prev = prev;
 
+	if(temp != NULL)
+	{
+		temp -> prev = new;
+	}
+
 	//Display the modified list:
 	if(display(header))  return 1;
 

@@ -205,7 +205,7 @@ int reverse()
 	{
 		next = curr -> next;
 		curr -> next = prev;
-		curr -> prev = prev;
+		curr -> prev = next;
 		prev = curr;
 		curr = next;
 	}

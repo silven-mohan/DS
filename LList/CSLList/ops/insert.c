@@ -259,6 +259,13 @@ int insertFront()
 {
 	struct node *temp = NULL;
 
+	if(header -> next == NULL)
+	{
+		header -> next = new;
+		new -> next = new;
+		return 0;
+	}
+
 	temp = header -> next;
 
 	//Linking the new node to the header node.
@@ -273,7 +280,7 @@ int insertFront()
 	do
 	{
 		temp = temp -> next;
-	}while(temp -> next != new->next);
+	}while(temp -> next != header -> next);
 	
 
 	temp -> next = header -> next;

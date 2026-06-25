@@ -192,7 +192,7 @@ int display(struct node *head)
 
 int modify()
 {
-	int key, i = 0, newValue;
+	int key, i = 1, newValue;
 	
 	//Taking the element from the user:
 	printf("\nEnter the position of the node whose value is to be modified: ");
@@ -203,7 +203,7 @@ int modify()
 	scanf("%d", &newValue);
 
 	//Checking if position is out of bounds:
-	if(key < 1 || key >= n)
+	if(key < 1 || key > n)
 	{	
 		printf("\nPosition of the node is out of bounds. Can't Access!!\n");
 		return 1;

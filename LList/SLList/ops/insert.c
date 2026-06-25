@@ -303,6 +303,12 @@ int insertEnd()
 
 	temp = header -> next;
 
+	if(temp == NULL)
+	{
+		header->next = new;
+		new->next = NULL;
+		return 0;
+	}
 
 	//Traversing till the last node:
 	while(temp -> next != NULL)

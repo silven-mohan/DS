@@ -1,12 +1,13 @@
-/** ==== Stacks : Pop Operation ==== **/
+/** ==== Stacks : Implementation of Linked Lists ==== **/
 
 
 /** ==== Documentation ==== **/
 /*
- * This program shows the implementation of the pop operation on the stacks which represented using Linked Lists.
+ * This program shows the implementation of the stacks which represented using Linked Lists.
  * At first, this program creates a stack with data and prints it.
  * Then, pushes a new element to the stack.
  * Finally, prints the modified stack.
+ * Pops an element from the stack and prints the stack.
 */
 
 
@@ -27,6 +28,7 @@ struct node {
 struct node* createNode(int);
 int createStk(struct node*, struct node*);
 int display(struct node*, struct node*);
+int PUSH(struct node*);
 int POP(struct node*, struct node*);
 void freeList(struct node*);
 
@@ -38,10 +40,10 @@ int main()
 	struct node *top = NULL, *header = NULL;
 
 	//Allocating memory:
-	top = malloc(sizeof(struct node));
-	header = malloc(sizeof(struct node));
+	top = malloc(sizeof(struct node*));
+	header = malloc(sizeof(struct node*));
 
-	//Checking if allocation failed:
+	//Chacking if allocation failed:
 	if(top == NULL || header == NULL)
 	{
 		printf("Memory allocation failed!!\n\n");
@@ -52,6 +54,12 @@ int main()
 	if(createStk(header, top))  return 1;
 
 	//Now displaying the created stack:
+	if(display(header, top))  return 1;
+
+	//Now pushing a new item to the stack:
+	if(PUSH(top))  return 1;
+
+	//Now displaying the modified stack:
 	if(display(header, top))  return 1;
 
 	//Now popping an item from the stack:
@@ -180,6 +188,27 @@ int display(struct node *head, struct node *top)
 }
 
 
+//PUSH():
+//This function pushes a new item to the stack.
+
+int PUSH(struct node *top)
+{
+	int val;
+
+	printf("\nEnter the value of the new item: ");
+	scanf("%d", &val);
+
+	//Creating a new item:
+	struct node *new = createNode(val);
+
+	//Pushing the new item to the stack:
+	top -> next -> next = new;
+	top -> next = new;
+
+	return 0;
+}
+
+
 //POP():
 //This function pops an item from the stack.
 
@@ -207,7 +236,6 @@ int POP(struct node *head, struct node *top)
 	}
 	
 	free(temp);
-
 	return 0;
 }
 

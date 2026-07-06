@@ -105,7 +105,7 @@ int dequeueFRONT(int *Q)
     {
         FRONT = REAR = -1;
     }
-    else if(FRONT > REAR)
+    else if(FRONT = MAX - 1)
     {
         FRONT = 0;
     }

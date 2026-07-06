@@ -284,3 +284,144 @@ printf("\nSuccessfully created the Queue.\n\n");
 ```
 
 ---
+
+## Queues / LLRep
+
+---
+
+### `ops/enqueue.c` — Missing Success Message on Empty-Queue Path
+
+**Location:** `enqueue()` function.
+
+**Bug:** When the queue is empty (`REAR -> next == NULL && FRONT -> next == NULL`), the function correctly sets `FRONT -> next = new` and `REAR -> next = new`, then immediately returns 0 without printing any confirmation message. All other paths print "Successfully Enqueued a member from the queue." The empty-queue insertion path silently succeeds with no output.
+
+**Fix:** Add `printf("Successfully Enqueued a member from the queue.\n\n");` before the `return 0` in the empty-queue branch.
+
+---
+
+## Queues / CQueues / ArrRep
+
+---
+
+### `ops/enqueue.c` — Fallthrough After Wrap-Around Insertion
+
+**Location:** `enqueue()` function.
+
+**Bug:** When `REAR == MAX - 1`, the code computes the wrap-around index and inserts the item, then **does not return** — execution falls through to the `else` branch which does `Q[++REAR] = ITEM`, performing a **double insertion and an out-of-bounds array write** (`REAR` was already `MAX - 1`, so `++REAR` would be `MAX`).
+
+**Fix:** Add a `return 0;` (or `printf` + `return 0`) at the end of the `if(REAR == MAX - 1)` block to prevent fallthrough:
+```c
+if(REAR == MAX - 1) {
+    next = (REAR % MAX) + 1;
+    if(FRONT == next) { ... return 1; }
+    else { REAR = next; Q[REAR] = ITEM; }
+    printf(...);
+    return 0;   // <-- missing: prevents fallthrough
+}
+```
+
+---
+
+## Queues / CQueues / LLRep
+
+---
+
+### `ops/enqueue.c` — Missing Success Message on Empty-Queue Path
+
+**Location:** `enqueue()` function.
+
+**Bug:** Same as `Queues/LLRep/ops/enqueue.c` — the empty-queue branch (`REAR->next == NULL && FRONT->next == NULL`) inserts the node and returns 0 without printing a confirmation message.
+
+**Fix:** Add `printf("Successfully Enqueued a member from the queue.\n\n");` before `return 0` in the empty-queue branch.
+
+---
+
+### `ops/dequeue.c` — Circular Re-link Traversal Uses Old Stale Pointer
+
+**Location:** `dequeue()` function, in the `else` block that re-fixes the circular link.
+
+**Bug:** After updating `FRONT -> next = last -> next` (advancing FRONT), the code traverses from `FRONT -> next` looking for the node whose `next == last` in order to re-link it. However, `last` has not been freed yet, so this comparison is valid. The traversal uses `while(temp -> next != last)` which is correct. No logical bug here in the re-link.
+
+**Actual Bug:** The traversal starts with `temp = FRONT -> next` and the loop condition is `while(temp -> next != last)`. If the new front node IS the old last circular pointer (i.e., only 2 nodes remain after deletion and the new front is the node that previously pointed to `last`), `temp -> next == last` is true immediately and the loop body never runs — which is correct. No traversal bug.
+
+**Real Issue:** None found in `dequeue()` core logic.
+
+---
+
+## Queues / Deque / ArrRep
+
+---
+
+### `ops/dequeue.c` — Wrong Wrap-Around in `dequeueFRONT()`
+
+**Location:** `dequeueFRONT()` function.
+
+**Bug:** The wrap-around branch for `FRONT` is:
+```c
+else if(FRONT > REAR) {
+    FRONT = 0;
+}
+```
+This sets `FRONT = 0` (moving it to the very start of the array), but the correct circular wrap-around when `FRONT` is at `MAX - 1` and needs to advance should be `FRONT = (FRONT + 1) % MAX`, not a hard reset to `0`. Setting `FRONT = 0` skips element `Q[0]` and could cause incorrect front positioning.
+
+**Fix:**
+```c
+// Wrong:
+else if(FRONT > REAR) {
+    FRONT = 0;
+}
+
+// Correct:
+else if(FRONT == MAX - 1) {
+    FRONT = 0;
+}
+```
+Or more robustly: replace the entire else-if chain with `FRONT = (FRONT + 1) % MAX` after the empty-queue check.
+
+---
+
+## Queues / Deque / LLRep
+
+---
+
+### `ops/dequeue.c` — NULL Dereference in `dequeueFRONT()` When Only One Element
+
+**Location:** `dequeueFRONT()` function.
+
+**Bug:** After removing the front node with `FRONT -> next = last -> next`, the code unconditionally executes:
+```c
+FRONT -> next -> prev = NULL;
+```
+When the queue had only **one element**, `last -> next` is NULL, so `FRONT -> next` becomes NULL after the assignment. Accessing `FRONT -> next -> prev` then **dereferences NULL** and crashes.
+
+**Fix:**
+```c
+// Wrong:
+FRONT -> next = last -> next;
+FRONT -> next -> prev = NULL;   // crashes if FRONT->next is now NULL
+
+// Correct:
+FRONT -> next = last -> next;
+if(FRONT -> next != NULL) {
+    FRONT -> next -> prev = NULL;
+}
+```
+
+---
+
+### `ops/enqueue.c` — Typo in `enqueueFRONT()` Success Message
+
+**Location:** `enqueueFRONT()` function.
+
+**Bug:** The success message reads:
+```c
+printf("Successfully Enqueued a member to the FRONT position ov the queue.\n\n");
+```
+The word "of" is misspelled as "ov".
+
+**Fix:**
+```c
+printf("Successfully Enqueued a member to the FRONT position of the queue.\n\n");
+```
+
+---

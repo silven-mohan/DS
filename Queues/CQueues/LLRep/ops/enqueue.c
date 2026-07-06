@@ -197,6 +197,7 @@ int enqueue(struct node* REAR, int ITEM)
 		FRONT -> next = new;
 		REAR -> next = new;
 		new -> next = new;
+		printf("\nSuccessfully Enqueued a member from the queue.\n\n");
 		return 0;
 	}
 

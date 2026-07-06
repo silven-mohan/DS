@@ -106,6 +106,9 @@ int enqueue(int *Q, int ITEM)
         {
             REAR = next;
             Q[REAR] = ITEM;
+
+            printf("\nSuccessfully Enqueued the ITEM to the Queue.\n\n");
+            return 0;
         }
     }
     if((FRONT == -1) && (REAR == -1))

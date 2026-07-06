@@ -4,3 +4,10 @@
 *.out
 *.exe
 *.gitkeep
+
+
+# Ignore VSCode configs:
+.vscode/
+
+# Ignore unwanted files:
+BUGS.md

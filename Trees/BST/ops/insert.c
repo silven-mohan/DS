@@ -33,7 +33,7 @@ void freeTree(struct node *);
 /** ==== Main Function ==== **/
 int main()
 {
-	int n;
+	int n, item;
 
 	printf("\nEnter the total no. of nodes in the BST: ");
 	scanf("%d", &n);
@@ -46,6 +46,16 @@ int main()
 	printf("\nBinary Search Tree: ");
 	inorder(root);
 	printf("\n\n");
+
+	printf("\nEnter the value that is to be inserted in the BST: ");
+	scanf("%d", &item);
+
+	insert(root, item);
+
+	printf("\nModified BST is: ");
+	inorder(root);
+	printf("\n\n");
+
 
 	//free the allocated memory:
 	freeTree(root);

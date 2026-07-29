@@ -1,202 +1,161 @@
-/** ==== Binary Trees : Implementation and level order traversal using linked lists ==== **/
+/** ==== Binary Trees : Implementation and Level Order Traversal using Linked Lists ==== **/
 
-
-/*
- * This program takes no. of nodes that should be in the tree n.
- * Creates a tree using linked lists with user given values.
- * Displays all nodes of the tree by using level order traversal technique.
-*/
-
-
-/** ==== Preprocessing Directives ==== **/
-#include<stdio.h>	//For Basic I/O functions like printf(), scanf(),...
-#include<stdlib.h>		//For DMA functions like malloc(), free(),...
-
+#include<stdio.h>
+#include<stdlib.h>
 
 /** ==== Global Declarations ==== **/
-/* --- Tree's Node Definition --- */
-struct node {
-	int data;
-	struct node *left;
-	struct node *right;
+
+/* Tree Node */
+struct node
+{
+    int data;
+    struct node *left;
+    struct node *right;
 };
 
-struct nodeQ {
-	int data;
-	struct nodeQ *next;
+/* Queue Node */
+struct nodeQ
+{
+    struct node *ptr;
+    struct nodeQ *next;
 };
 
-struct nodeQ *FRONT = NULL, *REAR = NULL;
+struct nodeQ *FRONT = NULL;
+struct nodeQ *REAR = NULL;
 
-
-/* --- Function Prototypes --- */
+/* Function Prototypes */
 struct node *createNode(int);
 struct node *createTree(int *);
 void levelorder(struct node *);
-void enqueue(int);
-int dequeue();
 
+void enqueue(struct node *);
+struct node *dequeue();
 
-/** ==== Main Function ==== **/
+/* Main Function */
+
 int main()
 {
-	int n;
+    int n;
 
-	printf("\nEnter the total no. of values that are to be in the tree: ");
-	scanf("%d", &n);
+    printf("Enter the total no. of values that are to be in the tree: ");
+    scanf("%d", &n);
 
-	//Creating the Tree:
-	struct node *root = createTree(&n);
+    printf("Enter %d values:\n", n);
 
-	//Displaying the tree:
-	printf("\nLevel Order Traversal: ");
-	levelorder(root);
+    struct node *root = createTree(&n);
 
-	return 0;
+    printf("\nLevel Order Traversal: ");
+    levelorder(root);
+
+    printf("\n");
+
+    return 0;
 }
 
-
 /** ==== Function Definitions ==== **/
-//createNode():
-//This helper funtion is used to create a node with the given value.
 
 struct node *createNode(int val)
 {
-	struct node *new = malloc(sizeof(struct node));
+    struct node *new = malloc(sizeof(struct node));
 
-	//Handling error case:
-	if(new == NULL)
-	{
-		printf("\nMemory allocation failed!!\n\n");
-		return NULL;
-	}
+    if(new == NULL)
+    {
+        printf("Memory Allocation Failed!\n");
+        return NULL;
+    }
 
-	new -> data = val;
-	new -> left = NULL;
-	new -> right = NULL;
+    new->data = val;
+    new->left = NULL;
+    new->right = NULL;
 
-	return new;
+    return new;
 }
-
-
-//createTree():
-//This helper function is used to create the tree with the given values.
 
 struct node *createTree(int *n)
 {
-	int data;
+    if(*n <= 0)
+        return NULL;
 
-	if(*n <=0)
-	{
-		return NULL;
-	}
+    int data;
+    scanf("%d", &data);
 
-	scanf("%d", &data);
-	struct node *root = createNode(data);
+    struct node *root = createNode(data);
 
-	int leftN = (*n-1)/2;
-	int rightN = (*n-1) - leftN;
+    if(root == NULL)
+        return NULL;
 
-	root -> left = createTree(&leftN);
-	root -> right = createTree(&rightN);
+    int leftN = (*n - 1) / 2;
+    int rightN = (*n - 1) - leftN;
 
-	return root;
+    root->left = createTree(&leftN);
+    root->right = createTree(&rightN);
+
+    return root;
 }
-
-
-//levelorder():
-//This helper function shows the implementation of the level order traversal of the binary tree:
 
 void levelorder(struct node *root)
 {
-	if(root == NULL)
-	{
-		printf("\nTree is empty!!\n\n");
-		return;
-	}
+    if(root == NULL)
+    {
+        printf("Tree is Empty!\n");
+        return;
+    }
 
-	enqueue(root -> data);
-	
-	while(FRONT -> next != NULL && REAR -> next != NULL)
-	{
-		printf("%d ", dequeue());
+    enqueue(root);
 
-		if(root -> left != NULL)
-		{
-			enqueue(root -> left -> data);
-		}
+    while(FRONT != NULL)
+    {
+        struct node *current = dequeue();
 
-		if(root -> right != NULL)
-		{
-			enqueue(root -> right -> data);
-		}
-	}
+        printf("%d ", current->data);
+
+        if(current->left != NULL)
+            enqueue(current->left);
+
+        if(current->right != NULL)
+            enqueue(current->right);
+    }
 }
 
-
-//enqueue():
-//This helper function inserts an element to the queue.
-
-void enqueue(int val)
+void enqueue(struct node *temp)
 {
-	struct nodeQ *new = malloc(sizeof(struct nodeQ));
+    struct nodeQ *new = malloc(sizeof(struct nodeQ));
 
-	if(new == NULL)
-	{
-		printf("\nMemory allocation failed!!\n\n");
-		return;
-	}
-	new -> data = val;
-	new -> next = NULL;
+    if(new == NULL)
+    {
+        printf("Memory Allocation Failed!\n");
+        return;
+    }
 
-	if(FRONT == NULL || REAR == NULL)
-	{
-		FRONT = malloc(sizeof(struct nodeQ)), REAR = malloc(sizeof(struct nodeQ));
+    new->ptr = temp;
+    new->next = NULL;
 
-		if(FRONT == NULL || REAR == NULL)
-		{
-			printf("\nMemory allocation failed!!\n\n");
-			return;
-		}
+    if(FRONT == NULL)
+    {
+        FRONT = REAR = new;
+        return;
+    }
 
-		FRONT -> next = new, REAR -> next = new;
-		return;
-	}	
-	
-	if(FRONT -> next == NULL && REAR -> next == NULL)
-	{
-		FRONT -> next = new, REAR -> next = new;
-		return;
-	}
-	
-	REAR -> next -> next = new;
-	REAR -> next = new;
+    REAR->next = new;
+    REAR = new;
 }
 
-
-//dequeue():
-//This helper function deletes an element from the queue.
-
-int dequeue()
+struct node *dequeue()
 {
-	if(FRONT == NULL || REAR == NULL)
+    if(FRONT == NULL)
 	{
-		printf("\nQueue is empty!!.\n");
-		return -1;
+        return NULL;
 	}
 
-	struct nodeQ *temp = FRONT -> next;
-	
-	if(FRONT -> next == REAR -> next)
-	{
-		REAR -> next = NULL;
-	}
+    struct nodeQ *temp = FRONT;
+    struct node *value = temp->ptr;
 
-	FRONT -> next = FRONT -> next -> next;
+    FRONT = FRONT->next;
 
-	int val = temp -> data;
+    if(FRONT == NULL)
+        REAR = NULL;
 
-	free(temp);
+    free(temp);
 
-	return val;
+    return value;
 }

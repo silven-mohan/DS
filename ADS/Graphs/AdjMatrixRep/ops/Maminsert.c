@@ -25,7 +25,7 @@ typedef struct {
 
 /*- Function Prototypes -*/
 
-Graph *createGraph(int );
+//Graph *createGraph(int );
 Graph *insertVertex(Graph *, int );
 Graph *insertEdge(Graph *, int, int);
 void destroyGraph(Graph *);
@@ -35,15 +35,15 @@ void printGraph(Graph *);
 /* Main Function */
 int main()
 {
-    int V, i, n, value, value2;
+    int i, n, value, value2;
 
     printf("\nEnter the total no. of vertices of the graph: ");
-    scanf("%d", &V);
-
-    Graph *g = createGraph(V);
-
-    printf("\nEnter the no.of new vertices that are to inserted: ");
     scanf("%d", &n);
+
+    Graph *g = malloc(sizeof(Graph));
+    g -> V = 0;
+    g -> vertices = NULL;
+    g -> adjMatrix = NULL;
 
     printf("\nEnter the values of the vertices: ");
     for(i=0;i<n;i++)
@@ -75,59 +75,6 @@ int main()
 
 
 /* Function Definitions */
-
-Graph *createGraph(int V)
-{
-    int i;
-    Graph *g = malloc(sizeof(Graph));
-
-    //Checking for errors:
-    if(g == NULL)
-    {
-        printf("\nMemory allocation failed!!\n\n");
-        return NULL;
-    }
-
-    g -> V = V;
-    g -> vertices = NULL;
-    g -> adjMatrix = NULL;
-    
-    g -> vertices = malloc(V * sizeof(int));
-
-    if(g -> vertices == NULL)
-    {
-        printf("\nMemory allocation failed!!\n\n");
-        return NULL;
-    }
-
-    g -> adjMatrix = calloc(V, sizeof(int *));
-
-    if(g -> adjMatrix == NULL)
-    {
-        printf("\nMemory allocation failed!!\n\n");
-        return NULL;
-    }
-
-    for(i=0;i<(g -> V);i++)
-    {
-        g -> adjMatrix[i] = calloc(V, sizeof(int));
-
-        if(g -> adjMatrix[i] == NULL)
-        {
-            printf("\nMemory allocation failed!!\n\n");
-            return NULL;
-        }
-    }
-
-    printf("\nEnter the values of the %d vertices: ", g -> V);
-    for(i=0;i<g -> V;i++)
-    {
-        scanf("%d", &(g -> vertices[i]));
-    }
-
-    return g;
-}
-
 
 Graph *insertVertex(Graph *g, int val)
 {

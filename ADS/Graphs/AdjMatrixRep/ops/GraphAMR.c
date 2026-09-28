@@ -25,109 +25,96 @@ typedef struct {
 
 /*- Function Prototypes -*/
 
-Graph *createGraph(int );
+//Graph *createGraph(int );
+void GraphMain();
 Graph *insertVertex(Graph *, int );
 Graph *insertEdge(Graph *, int, int);
+Graph *deleteEdge(Graph *, int, int);
+Graph *deleteVertex(Graph *, int);
 void destroyGraph(Graph *);
 void printGraph(Graph *);
 
 
 /* Main Function */
+
 int main()
 {
-    int V, i, n, value, value2;
+	GraphMain();
 
-    printf("\nEnter the total no. of vertices of the graph: ");
-    scanf("%d", &V);
+	return 0;
+}
 
-    Graph *g = createGraph(V);
 
-    printf("\nEnter the no.of new vertices that are to inserted: ");
-    scanf("%d", &n);
+void GraphMain()
+{
+	char ch;
+	int i, n, v, v1, choice;
 
-    printf("\nEnter the values of the vertices: ");
-    for(i=0;i<n;i++)
-    {
-        scanf("%d", &value);
-        g = insertVertex(g, value);
-    }
+	Graph *G = malloc(sizeof(Graph));
+	G -> V = 0;
+    	G -> vertices = NULL;
+    	G -> adjMatrix = NULL;
 
-    printGraph(g);
+	//Menu:
+	do
+	{
+		printf("\n ===== Graph Implementation: Using Adjacency Matrix\n\n");
+		printf("\n1. Insert a vertex,\n2. Insert an edge,\n3. Delete an Edge,\n4. Delete a Vertex,\n5. Show Adjacency List,\n6. Exit.\n\n");
+		printf("Choose: ");
+		
+		scanf("%d", &choice);
+		switch(choice){
+			case 1:
+				printf("\nEnter the value of the vertex: ");
+				scanf("%d", &v);
 
-    printf("\nFor how many pairs of vertices of the graph you want to associate an edge: ");
-    scanf("%d", &n);
+				G = insertVertex(G, v);
+				printGraph(G);
+				break;
 
-    for(i=0;i<n;i++)
-    {
-        printf("\nEnter the vertices V1 & V2: ");
-        scanf("%d%d", &value, &value2);
+			case 2:
+				printf("\nEnter the pair between which the edge should be associated: ");
+				scanf("%d%d", &v, &v1);
 
-        g = insertEdge(g, value, value2);
-    }
+				G = insertEdge(G, v, v1);
+				printGraph(G);
+				break;
+			
+			case 3:
+				printf("\nEnter the pair between which the edge should be deleted: ");
+				scanf("%d%d", &v, &v1);
 
-    printGraph(g);
+				G = deleteEdge(G, v, v1);
+				printGraph(G);
+				break;
 
-    //free the graph:
-    destroyGraph(g);
+			case 4:
+				printf("\nEnter the vertex that is to be deleted: ");
+				scanf("%d", &v);
 
-    return 0;
+				G = deleteVertex(G, v);
+				printGraph(G);
+				break;
+			case 5:
+				printGraph(G);
+				break;
+			case 6:
+				printf("\n ....... Exit .......\n\n");
+				return;
+			default:
+				printf("\nInvalid option!!\n\n");
+		}
+
+		printf("\nDo you want to continue(Y/n)?");
+		scanf(" %c", &ch);
+	}while(ch == 'Y' || ch == 'y');
+
+	destroyGraph(G);
+
 }
 
 
 /* Function Definitions */
-
-Graph *createGraph(int V)
-{
-    int i;
-    Graph *g = malloc(sizeof(Graph));
-
-    //Checking for errors:
-    if(g == NULL)
-    {
-        printf("\nMemory allocation failed!!\n\n");
-        return NULL;
-    }
-
-    g -> V = V;
-    g -> vertices = NULL;
-    g -> adjMatrix = NULL;
-    
-    g -> vertices = malloc(V * sizeof(int));
-
-    if(g -> vertices == NULL)
-    {
-        printf("\nMemory allocation failed!!\n\n");
-        return NULL;
-    }
-
-    g -> adjMatrix = calloc(V, sizeof(int *));
-
-    if(g -> adjMatrix == NULL)
-    {
-        printf("\nMemory allocation failed!!\n\n");
-        return NULL;
-    }
-
-    for(i=0;i<(g -> V);i++)
-    {
-        g -> adjMatrix[i] = calloc(V, sizeof(int));
-
-        if(g -> adjMatrix[i] == NULL)
-        {
-            printf("\nMemory allocation failed!!\n\n");
-            return NULL;
-        }
-    }
-
-    printf("\nEnter the values of the %d vertices: ", g -> V);
-    for(i=0;i<g -> V;i++)
-    {
-        scanf("%d", &(g -> vertices[i]));
-    }
-
-    return g;
-}
-
 
 Graph *insertVertex(Graph *g, int val)
 {
@@ -281,3 +268,137 @@ void destroyGraph(Graph *G)
 	free(G -> adjMatrix);
 	free(G);
 }	
+
+
+Graph *deleteEdge(Graph *g, int V1, int V2)
+{
+	int i, V1i = -1, V2i = -1;
+
+	for(i=0;i<(g -> V);i++)
+	{
+		if(g -> vertices[i] == V1)
+		{
+			V1i =i;
+		}
+	}
+
+	for(i=0;i<(g -> V);i++)
+	{
+		if(g -> vertices[i] == V2)
+		{
+			V2i = i;
+		}
+	}
+
+	if(V1i == -1 || V2i == -1)
+	{
+		printf("\nVertex found.\n\n");
+		return g;
+	}
+
+	g -> adjMatrix[V1i][V2i] = 0;
+	g -> adjMatrix[V2i][V1i] = 0;
+
+	return g;
+}
+
+
+Graph *deleteVertex(Graph *G, int V)
+{
+	int i, j, Vi = -1;
+
+	if(G == NULL)
+	{
+		printf("\nGraph doesn't exist!!\n\n");
+		return NULL;
+	}
+
+	// Find the index of the vertex to be deleted:
+	for(i = 0; i < G->V; i++)
+	{
+		if(G->vertices[i] == V)
+		{
+			Vi = i;
+			break;
+		}
+	}
+
+	if(Vi == -1)
+	{
+		printf("\nVertex not found.\n\n");
+		return G;
+	}
+
+	
+	//Shift the vertices after Vi one position to the left.
+	for(i = Vi; i < G->V - 1; i++)
+	{
+		G->vertices[i] = G->vertices[i + 1];
+	}
+
+	
+	//Remove the column Vi from every row.
+	for(i = 0; i < G->V; i++)
+	{
+		for(j = Vi; j < G->V - 1; j++)
+		{
+			G->adjMatrix[i][j] = G->adjMatrix[i][j + 1];
+		}
+	}
+
+	
+	//Free the row corresponding to the deleted vertex.
+	free(G->adjMatrix[Vi]);
+
+	
+	//Shift the remaining row pointers one position up.
+	for(i = Vi; i < G->V - 1; i++)
+	{
+		G->adjMatrix[i] = G->adjMatrix[i + 1];
+	}
+
+	
+	G->V--;
+
+	
+	//Resize the vertices array.
+	int *tempVertices = realloc(G->vertices, G->V * sizeof(int));
+
+	if(G->V > 0 && tempVertices == NULL)
+	{
+		printf("\nMemory reallocation failed!!\n\n");
+		return G;
+	}
+
+	G->vertices = tempVertices;
+
+	
+	//Resize the array of row pointers.
+	int **tempMatrix = realloc(G->adjMatrix, G->V * sizeof(int *));
+
+	if(G->V > 0 && tempMatrix == NULL)
+	{
+		printf("\nMemory reallocation failed!!\n\n");
+		return G;
+	}
+
+	G->adjMatrix = tempMatrix;
+
+	
+	//Resize every remaining row.
+	for(i = 0; i < G->V; i++)
+	{
+		int *tempRow = realloc(G->adjMatrix[i],
+							   G->V * sizeof(int));
+
+		if(G->V > 0 && tempRow == NULL)
+		{
+			printf("\nMemory reallocation failed!!\n\n");
+			return G;
+		}
+
+		G->adjMatrix[i] = tempRow;
+	}
+
+	return G;
+}
